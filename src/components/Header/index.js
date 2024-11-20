@@ -2,6 +2,7 @@ import {Link, withRouter} from 'react-router-dom'
 
 import Cookies from 'js-cookie'
 
+import CartContext from '../../context/CartContext'
 import './index.css'
 
 const Header = props => {
@@ -10,7 +11,21 @@ const Header = props => {
     Cookies.remove('jwt_token')
     history.replace('/login')
   }
-
+  const renderCartItemCount = () => (
+    <CartContext.Consumer>
+      {value => {
+        const {cartList} = value
+        const cartItemCount = cartList.length
+        return (
+          <>
+            {cartItemCount > 0 ? (
+              <span className="cart-count-badge">{cartItemCount}</span>
+            ) : null}
+          </>
+        )
+      }}
+    </CartContext.Consumer>
+  )
   return (
     <nav className="nav-header">
       <div className="nav-content">
@@ -57,6 +72,7 @@ const Header = props => {
             <li className="nav-menu-item">
               <Link to="/cart" className="nav-link">
                 Cart
+                {renderCartItemCount()}
               </Link>
             </li>
           </ul>
@@ -97,6 +113,7 @@ const Header = props => {
                 alt="nav cart"
                 className="nav-bar-image"
               />
+              {renderCartItemCount()}
             </Link>
           </li>
         </ul>
